@@ -80,6 +80,7 @@ gerarPdf.addEventListener('click', () => {
     doc.text(`${cpf}`, 155, 70);
     doc.text(`${dataHojeFormatada}`, 163, 21);
     doc.text(`${dataAgendamentoFormatada}`, 51, 142.3);
+    doc.text(`${horario}`, 75, 142.3);
     doc.text(`${cidade}`, 160.4, 102);
     doc.text(`${nomeMae}`, 50, 81);
     doc.text(`${endereco}`, 50, 91.2);
