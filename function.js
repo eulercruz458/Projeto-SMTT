@@ -120,6 +120,10 @@ credencialEstacionamento.addEventListener('click', async () => {
         const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
         return meses[parseInt(mes, 10) - 1];
     }
+    function formatarTelefone(telefone) {
+        const telLimpo = telefone.replace(/\D/g, '');
+        return telLimpo.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
+    }
 
     // Captura dados do formulário
     const nome = document.getElementById('nome').value;
@@ -140,32 +144,25 @@ credencialEstacionamento.addEventListener('click', async () => {
     const dataAgendamentoFormatada = formatarData(dataAgendamento);
     const dataNascimentoFormatada = formatarData(dataNascimento);
     const dataHojeFormatada = formatarDataHoje(dataHoje);
-
-    function formatarTelefone(telefone) {
-        const telLimpo = telefone.replace(/\D/g, '');
-        return telLimpo.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
-    }
     const telefone1Formatado = formatarTelefone(telefone1);
 
     // Cria o PDF
     const doc = new jsPDF();
     doc.setFontSize(12);
 
-    const texto = `Eu, ${nome}, portador(a) do RG nº ${rg} SSP ${ssp}, inscrito(a) no CPF sob o nº ${cpf}, residente e domiciliado em ${endereco}, ${numCasa}, ${bairro}, ${cidade}, estado de Sergipe, com telefone nº ${telefone1Formatado}, nascido(a) em ${dataNascimentoFormatada}, solicito à Superintendência Municipal de Transporte e Trânsito de Aracaju, o cadastramento para recebimento de credencial e vaga especial em estacionamentos, por estar enquadrado(a) no que dispõe a resolução do CONTRAN nº 965, de 17 de maio de 2022. Declaro que as informações acima são verdadeiras e estou ciente da forma de utilização da credencial e as consequências do seu uso indevido.
-Aracaju/SE, ${dataHojeFormatada}.
+    // Texto Principal
+    const textoPrincipal = `Eu, ${nome}, portador(a) do RG nº ${rg} SSP ${ssp}, inscrito(a) no CPF sob o nº ${cpf}, residente e domiciliado em ${endereco}, ${numCasa}, ${bairro}, ${cidade}, estado de Sergipe, com telefone nº ${telefone1Formatado}, nascido(a) em ${dataNascimentoFormatada}, solicito à Superintendência Municipal de Transporte e Trânsito de Aracaju, o cadastramento para recebimento de credencial e vaga especial em estacionamentos, por estar enquadrado(a) no que dispõe a resolução do CONTRAN nº 965, de 17 de maio de 2022. Declaro que as informações acima são verdadeiras e estou ciente da forma de utilização da credencial e as consequências do seu uso indevido.`;
 
-________________________________________________
-Assinatura do Requerente
+    const textoAssinatura = `Aracaju/SE, ${dataHojeFormatada}.\n\n________________________________________________\nAssinatura do Requerente`;
 
+    const textoDataAgendada = `\n\n\n\n\n\nDATA AGENDADA PARA PERÍCIA: ${dataAgendamentoFormatada}  ${horario}`
 
-DATA AGENDADA PARA PERÍCIA: ${dataAgendamentoFormatada}  ${horario}`;
-
+    // Adiciona a imagem do logo
     const logoURL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_F4EJslF8WhpMy0bCSb7D3aJpiYcZbpxxb0_-4KfgKzvUMEtr6yYQc9RL-TfC44m5-4&usqp=CAU';
-
     const logoImg = await carregarImagem(logoURL);
-    doc.addImage(logoImg, 'PNG', 10, 10, 50, 20); // Adiciona a logo no topo
+    doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
 
-    // Adiciona o texto ao lado da imagem
+    // Adiciona o texto institucional ao lado da imagem
     doc.setFontSize(9);
     const textLines = [
         'ESTADO DE SERGIPE',
@@ -175,60 +172,136 @@ DATA AGENDADA PARA PERÍCIA: ${dataAgendamentoFormatada}  ${horario}`;
         'DIRETORIA ADMINISTRATIVA E FINANCEIRA',
         'NÚCLEO DE PERÍCIA MÉDICA'
     ];
-  
-    let textY = 13; // Coordenada Y para a primeira linha de texto
+
+    let textY = 13;
     textLines.forEach(line => {
-        doc.text(line, 65, textY); // Posiciona o texto ao lado da imagem
-        textY += 3; // Incrementa para a próxima linha
+        doc.text(line, 65, textY);
+        textY += 3;
     });
 
-    const margin = 20;
-    const largura = 210 - margin * 2;
-
-    // Adiciona o título centralizado
+    // Título centralizado
     doc.setFontSize(12);
-    doc.text('REQUERIMENTO DE CREDENCIAL', 105, textY + 15, { align: 'center' }); // Centraliza o texto
-    doc.text('ESTACIONAMENTO ESPECIAL PARA IDOSO E DEFICIENTE', 105, textY + 20, { align: 'center' }); // Centraliza o texto abaixo
+    doc.text('REQUERIMENTO DE CREDENCIAL', 105, textY + 15, { align: 'center' });
+    doc.text('ESTACIONAMENTO ESPECIAL PARA IDOSO E DEFICIENTE', 105, textY + 20, { align: 'center' });
 
-    // Desenha os retângulos e adiciona os textos
-    const rectY = textY + 25; // Coordenada Y para a parte superior dos retângulos
-    const rectWidth = 50; // Largura dos retângulos
-    const rectHeight = 10; // Altura dos retângulos
-    const marginX = 20; // Margem esquerda para o primeiro retângulo
+        // Desenha os retângulos e adiciona os textos
+const rectY = textY + 27; // Coordenada Y para a parte superior dos retângulos
+const rectWidth = 8; // Largura dos retângulos (aumentada)
+const rectHeight = 8; // Altura dos retângulos (aumentada)
+const marginX = 25; // Margem esquerda para o primeiro retângulo (aumentada para separar mais os retângulos)
 
-    // Desenha retângulo para "IDOSO"
-    doc.rect(105 - marginX, rectY, rectWidth, rectHeight); // Posição do retângulo
-    doc.text('IDOSO', 105 - marginX + rectWidth / 4, rectY + 7); // Centraliza o texto dentro do retângulo
+// Desenha retângulo para "IDOSO"
+doc.rect(85 - marginX, rectY + 1 , rectWidth, rectHeight); // Posição do retângulo "IDOSO"
+doc.text('IDOSO', 68 - marginX + rectWidth / 4, rectY + 7); // Centraliza o texto dentro do retângulo
 
-    // Desenha retângulo para "DEFICIENTE"
-    doc.rect(105 + marginX, rectY, rectWidth, rectHeight); // Posição do segundo retângulo
-    doc.text('DEFICIENTE', 105 + marginX + rectWidth / 4, rectY + 7); // Centraliza o texto dentro do retângulo
+// Desenha retângulo para "DEFICIENTE"
+doc.rect(125 + marginX, rectY + 1, rectWidth, rectHeight); // Posição do retângulo "DEFICIENTE"
+doc.text('DEFICIENTE', 97 + marginX + rectWidth / 4, rectY + 7); // Centraliza o texto dentro do retângulo
+doc.text('X', 125.5 + marginX + rectWidth / 4, rectY + 7); //marca o X no quadrado de deficiente
 
-    let y = rectY + 15; // Ajusta a posição do corpo do texto para começar abaixo dos retângulos
+let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo dos retângulos
 
-    const linhas = doc.splitTextToSize(texto, largura);
-    linhas.forEach((linha) => {
-        const palavras = linha.split(' ');
-        const numPalavras = palavras.length;
+    // Função para adicionar texto justificado
+    function adicionarTextoJustificado(doc, texto, largura, margem, yInicial) {
+        const linhas = doc.splitTextToSize(texto, largura);
+        let y = yInicial;
 
-        if (numPalavras > 1) {
-            const larguraTotal = palavras.reduce((total, palavra) => total + doc.getTextWidth(palavra) + doc.getTextWidth(' '), 0);
-            const espacoExtra = largura - larguraTotal;
-            const espacos = numPalavras - 1;
-            const espacoAdicional = espacoExtra / espacos;
+        linhas.forEach((linha) => {
+            const palavras = linha.split(' ');
+            const numPalavras = palavras.length;
 
-            let x = margin;
-            palavras.forEach((palavra) => {
-                doc.text(palavra, x, y);
-                x += doc.getTextWidth(palavra) + espacoAdicional + doc.getTextWidth(' ');
-            });
-        } else {
-            doc.text(linha, margin, y);
-        }
+            if (numPalavras > 1) {
+                const larguraTotal = palavras.reduce((total, palavra) => total + doc.getTextWidth(palavra) + doc.getTextWidth(' '), 0);
+                const espacoExtra = largura - larguraTotal;
+                const espacos = numPalavras - 1;
+                const espacoAdicional = espacoExtra / espacos;
 
-        y += 7; // Ajuste o espaçamento entre as linhas
-    });
+                let x = margem;
+                palavras.forEach((palavra) => {
+                    doc.text(palavra, x, y);
+                    x += doc.getTextWidth(palavra) + espacoAdicional + doc.getTextWidth(' ');
+                });
+            } else {
+                doc.text(linha, margem, y);
+            }
 
+            y += 7;
+        });
+        return y; // Retorna a posição Y final
+    }
+
+    const textoEndereco = "Av. Murilo Dantas, 881, Sala 21, Farolândia, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
+    y += 15; // Ajusta a posição para o novo bloco de texto
+    doc.setFontSize(9);
+    doc.text(textoEndereco, 105, 182, { align: 'center' }); // Centraliza o texto no eixo X
+
+    // Chama a função de texto justificado para o corpo do texto principal
+    doc.setFontSize(12);
+    y = adicionarTextoJustificado(doc, textoPrincipal, 170, 20, 80);
+
+    // Adiciona o texto de assinatura e data centralizado
+    doc.text(textoAssinatura, 105, y + 10, { align: 'center' });
+    doc.text(textoDataAgendada, 20, y + 10);
+
+    doc.text(`- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -`, 5, 190);
+
+
+        doc.addImage(logoImg, 'PNG', 10, 192, 50, 20);
+    
+        // Adiciona o texto institucional ao lado da imagem
+        doc.setFontSize(9);
+        textY = 195
+        textLines.forEach(line => {
+            doc.text(line, 65, textY);
+            textY += 3;
+        });
+        
+        doc.setFontSize(12);
+        textY += 10;
+        doc.text(`PERICIA MÉDICA`, 105, textY, { align: 'center' });
+        textY += 10;
+
+        const DataAgendada = `DATA PERÍCIA: ${dataAgendamentoFormatada} - ${horario}`
+        doc.text(DataAgendada, 20, textY);
+        textY += 8;
+
+        const NomeRequerente = `NOME DO REQUERENTE: ${nome}`
+        doc.text(NomeRequerente, 20, textY)
+        textY += 5;
+
+        
+        
+        doc.rect( marginX + 10, textY + 5, rectWidth-2, rectHeight-2); 
+        doc.text('FISICO', -7 + marginX + rectWidth / 4, textY+10); // Centraliza o texto dentro do retângulo
+
+        // Auditivo
+        doc.rect( marginX + 45, textY + 5, rectWidth-2, rectHeight-2); 
+        doc.text('AUDITIVO', 22 + marginX + rectWidth / 4, textY+10); // Centraliza o texto dentro do retângulo
+
+        // VISUAL
+        doc.rect( marginX + 83, textY + 5, rectWidth-2, rectHeight-2); 
+        doc.text('VISUAL', 65 + marginX + rectWidth / 4, textY+10); // Centraliza o texto dentro do retângulo
+
+        // MENTAL
+        doc.rect( marginX + 125, textY + 5, rectWidth-2, rectHeight-2); 
+        doc.text('MENTAL', 105 + marginX + rectWidth / 4, textY+10); // Centraliza o texto dentro do retângulo
+
+        // TEA
+        doc.rect( marginX + 151, textY + 5, rectWidth-2, rectHeight-2); 
+        doc.text('TEA', 140 + marginX + rectWidth / 4, textY+10); // Centraliza o texto dentro do retângulo
+        
+        textY+=20;
+        
+        doc.text(`LOCAL PERICIA`, 105, textY+3,{ align: 'center' });
+        doc.setFontSize(9)
+        const textoEnderecoAgendamento = "CONFIRMAR LOCAL DA PERICIA PELO WHATSAPP COM 2 DIAS DE ANTECEDÊNCIA\nENDEREÇO 1: Av. Murilo Dantas, 881, Sala 21, Farolândia, Aracaju-SE\nENDEREÇO 2: R. Roberto Fonseca, 200, Inácio Barbosa, Aracaju - SE\nFone: (79) 98836-6435 e 98836-6497";
+        textY+=5;
+        doc.text(textoEnderecoAgendamento, 105, textY+3, { align: 'center' });
+        
+
+    
+
+    // Salva o PDF com o nome personalizado
     const nomeArquivoCredencial = `${nome.replace(/ /g, '_')}_${cpf}.pdf`;
     doc.save(nomeArquivoCredencial);
 });
