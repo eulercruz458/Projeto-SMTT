@@ -234,7 +234,7 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
     const textoEndereco = "Av. Murilo Dantas, 881, Sala 21, Farolândia, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
     y += 15; // Ajusta a posição para o novo bloco de texto
     doc.setFontSize(9);
-    doc.text(textoEndereco, 105, 182, { align: 'center' }); // Centraliza o texto no eixo X
+    //doc.text(textoEndereco, 105, 182, { align: 'center' }); // Centraliza o texto no eixo X
 
     // Chama a função de texto justificado para o corpo do texto principal
     doc.setFontSize(12);
