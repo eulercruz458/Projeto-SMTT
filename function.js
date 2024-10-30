@@ -9,14 +9,140 @@ function obterDataAtual() {
     return `${ano}-${mes}-${dia}`;
 }
 
+// Funções de formatação
+function formatarData(data) {
+    const partes = data.split('-');
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+function formatarDataHoje(data) {
+    const partes = data.split('-');
+    const dia = partes[2];
+    const mes = obterMesPorExtenso(partes[1]);
+    const ano = partes[0];
+    return `${dia} de ${mes} de ${ano}`;
+}
+function obterMesPorExtenso(mes) {
+    const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    return meses[parseInt(mes, 10) - 1];
+}
+function formatarTelefone(telefone) {
+    const telLimpo = telefone.replace(/\D/g, '');
+    return telLimpo.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
+}
+
+const textLines = [
+    'ESTADO DE SERGIPE',
+    'PREFEITURA MUNICIPAL DE ARACAJU',
+    'SECRETARIA MUNICIPAL DA DEFESA SOCIAL E DA CIDADANIA',
+    'SUPERINTENDÊNCIA MUNICIPAL DE TRANSPORTES E TRÂNSITO',
+    'DIRETORIA ADMINISTRATIVA E FINANCEIRA',
+    'NÚCLEO DE PERÍCIA MÉDICA'
+];
+
+// Função para carregar a imagem
+function carregarImagem(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = url;
+        img.crossOrigin = "Anonymous";
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL("image/png"));
+        };
+        img.onerror = reject;
+    });
+}
+
+    // Função para adicionar texto justificado
+    function adicionarTextoJustificado(doc, texto, largura, margem, yInicial) {
+        const linhas = doc.splitTextToSize(texto, largura);
+        let y = yInicial;
+
+        linhas.forEach((linha) => {
+            const palavras = linha.split(' ');
+            const numPalavras = palavras.length;
+
+            if (numPalavras > 1) {
+                const larguraTotal = palavras.reduce((total, palavra) => total + doc.getTextWidth(palavra) + doc.getTextWidth(' '), 0);
+                const espacoExtra = largura - larguraTotal;
+                const espacos = numPalavras - 1;
+                const espacoAdicional = espacoExtra / espacos;
+
+                let x = margem;
+                palavras.forEach((palavra) => {
+                    doc.text(palavra, x, y);
+                    x += doc.getTextWidth(palavra) + espacoAdicional + doc.getTextWidth(' ');
+                });
+            } else {
+                doc.text(linha, margem, y);
+            }
+
+            y += 7;
+        });
+        return y; // Retorna a posição Y final
+    }
+
+let autorizacao = false;
+
+// Função para verificar a idade
+function verificarIdade(nomeMae) {
+    const dataNascimento = document.getElementById('dataNascimento').value;
+    const hoje = new Date();
+    const anoNascimento = new Date(dataNascimento).getFullYear();
+    const mesNascimento = new Date(dataNascimento).getMonth();
+    const diaNascimento = new Date(dataNascimento).getDate();
+
+    // Calcula a idade
+    let idade = hoje.getFullYear() - anoNascimento;
+    
+    // Ajusta a idade se ainda não tiver feito aniversário este ano
+    if (hoje.getMonth() < mesNascimento || (hoje.getMonth() === mesNascimento && hoje.getDate() < diaNascimento)) {
+        idade--;
+    }
+
+    let cpfResponsavel = null;
+    let nomeOutroResponsavel = null; // Variável para o nome do outro responsável
+
+    // Verifica se a idade é menor que 8
+    if (idade < 8) {
+        const mensagem = `É necessário fazer a autorização para catraca. Deseja fazer em nome de ${nomeMae}?`;
+        autorizacao = confirm(mensagem);
+        
+        if (autorizacao) {
+            cpfResponsavel = prompt(`Informe o CPF de ${nomeMae}:`);
+            if (cpfResponsavel) {
+                alert("Autorização em nome de " + nomeMae + " foi iniciada.");
+            } else {
+                alert("Autorização não foi feita.");
+            }
+        } else {
+            nomeOutroResponsavel = prompt("Informe o nome do outro responsável:");
+            cpfResponsavel = prompt("Informe o CPF do responsável:");
+
+            if (nomeOutroResponsavel && cpfResponsavel) {
+                alert(`Autorização em nome de ${nomeOutroResponsavel} (CPF: ${cpfResponsavel}) foi iniciada.`);
+            } else {
+                alert("Autorização não foi feita.");
+            }
+        }
+    }
+
+    return { cpfResponsavel, nomeOutroResponsavel}; // Retorna CPF e nome do responsável
+}
+
+
 document.getElementById('dataHoje').value = obterDataAtual();
 
 
 
-gerarPdf.addEventListener('click', () => {
+gerarPdf.addEventListener('click', async () => {
     const { jsPDF } = window.jspdf; // Acessa jsPDF do objeto global
-
     // Captura todos os valores do formulário
+    
     const nome = document.getElementById('nome').value;
     const rg = document.getElementById('rg').value;
     const ssp = document.getElementById('ssp').value;
@@ -31,33 +157,26 @@ gerarPdf.addEventListener('click', () => {
     const telefone1 = document.getElementById('telefone1').value;
     const telefone2 = document.getElementById('telefone2').value;
     const dataAgendamento = document.getElementById('dataAgendamento').value;
-  const sexo = document.querySelector('input[name="sexo"]:checked').value;
-   const horario = document.getElementById('horario').value;
+    const sexo = document.querySelector('input[name="sexo"]:checked').value;
+    const horario = document.getElementById('horario').value;
+    
+    const { cpfResponsavel, nomeOutroResponsavel} = verificarIdade(nomeMae);
   
-    function formatarTelefone(telefone) {
-        const telLimpo = telefone.replace(/\D/g, ''); // Remove caracteres não numéricos
-        const telefoneFormatado = telLimpo.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
-        return telefoneFormatado;
-    }
   
-      const telefone1Formatado = formatarTelefone(telefone1);
+  
+    const telefone1Formatado = formatarTelefone(telefone1);
     const telefone2Formatado = formatarTelefone(telefone2);
-  
-  
-
-    // Função para formatar a data
-    function formatarData(data) {
-        const partes = data.split('-');
-        return `${partes[2]}/${partes[1]}/${partes[0]}`; // Formato DD/MM/YYYY
-    }
 
     const dataHojeFormatada = formatarData(dataHoje);
+    const dataHojeFormatadaExtenso = formatarDataHoje(dataHoje);
     const dataAgendamentoFormatada = formatarData(dataAgendamento);
     const dataNascimentoFormatada = formatarData(dataNascimento);
   
 
     // Cria um novo documento PDF
     const doc = new jsPDF();
+  
+
 
     // Define o título do PDF
     doc.setFontSize(18);
@@ -97,6 +216,49 @@ gerarPdf.addEventListener('click', () => {
 
     // Salva o PDF
     const nomeArquivo = `${nome.replace(/ /g, '_')}_${cpf}.pdf`; // Substitui espaços por sublinhados
+  
+     if (cpfResponsavel) {
+        doc.addPage(); // Adiciona uma nova página
+        doc.setFontSize(18);
+        doc.setFontSize(12);
+        
+        const URLLogo = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_F4EJslF8WhpMy0bCSb7D3aJpiYcZbpxxb0_-4KfgKzvUMEtr6yYQc9RL-TfC44m5-4&usqp=CAU';
+        const logoImg = await carregarImagem(URLLogo); // await agora dentro de uma função async
+        doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
+    
+       // Adiciona o texto institucional ao lado da imagem
+        doc.setFontSize(9);
+        textY = 13
+        textLines.forEach(line => {
+            doc.text(line, 65, textY);
+            textY += 3;
+        });
+       
+
+       
+        const textoPrincipal = `Eu, ${nomeMae}, inscrito(a) no CPF sob o nº ${cpfResponsavel}, responsável pelo(a) menor ${nome}, inscrito(a) no CPF sob o nº ${cpf}, faço a opção pela utilização da catraca, visando à maior disponibilidade de assentos no transporte coletivo, utilizando-se, neste caso, a impressão digital do acompanhante previamente cadastrado no sistema.`
+
+        const textoResponsavel = `Eu, ${nomeOutroResponsavel}, inscrito(a) no CPF sob o nº ${cpfResponsavel}, responsável pelo(a) menor ${nome}, inscrito(a) no CPF sob o nº ${cpf}, faço a opção pela utilização da catraca, visando à maior disponibilidade de assentos no transporte coletivo, utilizando-se, neste caso, a impressão digital do acompanhante previamente cadastrado no sistema.`
+        
+            const textoAssinatura = `Aracaju/SE, ${dataHojeFormatadaExtenso}.\n\n________________________________________________\nAssinatura do(a) Responsavel`;
+
+        
+        // Exibe as informações do responsável
+        if (autorizacao) { // Se for CPF da mãe
+            doc.setFontSize(16)
+             doc.text(`Autorização para Utilização da Catraca`, 105, 100, { align: 'center'});
+             doc.setFontSize(12)
+            adicionarTextoJustificado(doc, textoPrincipal, 170, 20, 120);
+            doc.text(textoAssinatura, 105, 160, { align: 'center' });
+          
+        } else { // Se for CPF do outro responsável
+            doc.setFontSize(16)
+             doc.text(`Autorização para Utilização da Catraca`, 105, 100, { align: 'center'});
+             doc.setFontSize(12)
+             adicionarTextoJustificado(doc, textoResponsavel, 170, 20, 120);
+             doc.text(textoAssinatura, 105, 160, { align: 'center' })
+        }
+    }
     doc.save(nomeArquivo);
   
 });
@@ -105,26 +267,7 @@ gerarPdf.addEventListener('click', () => {
 credencialEstacionamento.addEventListener('click', async () => {
     const { jsPDF } = window.jspdf;
 
-    // Funções de formatação
-    function formatarData(data) {
-        const partes = data.split('-');
-        return `${partes[2]}/${partes[1]}/${partes[0]}`;
-    }
-    function formatarDataHoje(data) {
-        const partes = data.split('-');
-        const dia = partes[2];
-        const mes = obterMesPorExtenso(partes[1]);
-        const ano = partes[0];
-        return `${dia} de ${mes} de ${ano}`;
-    }
-    function obterMesPorExtenso(mes) {
-        const meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-        return meses[parseInt(mes, 10) - 1];
-    }
-    function formatarTelefone(telefone) {
-        const telLimpo = telefone.replace(/\D/g, '');
-        return telLimpo.replace(/^(\d{2})(\d{1})(\d{4})(\d{4})$/, '($1) $2 $3-$4');
-    }
+
 
     // Captura dados do formulário
     const nome = document.getElementById('nome').value;
@@ -158,21 +301,16 @@ credencialEstacionamento.addEventListener('click', async () => {
 
     const textoDataAgendada = `\n\n\n\n\n\nDATA AGENDADA PARA PERÍCIA: ${dataAgendamentoFormatada}  ${horario}`
 
-    // Adiciona a imagem do logo
+   
+    
+     //Adiciona a imagem do logo
     const logoURL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_F4EJslF8WhpMy0bCSb7D3aJpiYcZbpxxb0_-4KfgKzvUMEtr6yYQc9RL-TfC44m5-4&usqp=CAU';
     const logoImg = await carregarImagem(logoURL);
     doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
 
     // Adiciona o texto institucional ao lado da imagem
     doc.setFontSize(9);
-    const textLines = [
-        'ESTADO DE SERGIPE',
-        'PREFEITURA MUNICIPAL DE ARACAJU',
-        'SECRETARIA MUNICIPAL DA DEFESA SOCIAL E DA CIDADANIA',
-        'SUPERINTENDÊNCIA MUNICIPAL DE TRANSPORTES E TRÂNSITO',
-        'DIRETORIA ADMINISTRATIVA E FINANCEIRA',
-        'NÚCLEO DE PERÍCIA MÉDICA'
-    ];
+ 
 
     let textY = 13;
     textLines.forEach(line => {
@@ -202,34 +340,7 @@ doc.text('X', 125.5 + marginX + rectWidth / 4, rectY + 7); //marca o X no quadra
 
 let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo dos retângulos
 
-    // Função para adicionar texto justificado
-    function adicionarTextoJustificado(doc, texto, largura, margem, yInicial) {
-        const linhas = doc.splitTextToSize(texto, largura);
-        let y = yInicial;
 
-        linhas.forEach((linha) => {
-            const palavras = linha.split(' ');
-            const numPalavras = palavras.length;
-
-            if (numPalavras > 1) {
-                const larguraTotal = palavras.reduce((total, palavra) => total + doc.getTextWidth(palavra) + doc.getTextWidth(' '), 0);
-                const espacoExtra = largura - larguraTotal;
-                const espacos = numPalavras - 1;
-                const espacoAdicional = espacoExtra / espacos;
-
-                let x = margem;
-                palavras.forEach((palavra) => {
-                    doc.text(palavra, x, y);
-                    x += doc.getTextWidth(palavra) + espacoAdicional + doc.getTextWidth(' ');
-                });
-            } else {
-                doc.text(linha, margem, y);
-            }
-
-            y += 7;
-        });
-        return y; // Retorna a posição Y final
-    }
 
     const textoEndereco = "Av. Murilo Dantas, 881, Sala 21, Farolândia, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
     y += 15; // Ajusta a posição para o novo bloco de texto
@@ -307,20 +418,3 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
     doc.save(nomeArquivoCredencial);
 });
 
-// Função para carregar a imagem
-function carregarImagem(url) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = url;
-        img.crossOrigin = "Anonymous";
-        img.onload = () => {
-            const canvas = document.createElement("canvas");
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0);
-            resolve(canvas.toDataURL("image/png"));
-        };
-        img.onerror = reject;
-    });
-}
