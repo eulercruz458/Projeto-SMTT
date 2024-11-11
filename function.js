@@ -373,7 +373,7 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
         doc.text(`PERICIA MÉDICA`, 105, textY, { align: 'center' });
         textY += 10;
 
-        const DataAgendada = `DATA PERÍCIA: ${dataAgendamentoFormatada} - ${horario}`
+        const DataAgendada = `DATA PERÍCIA: ${dataAgendamentoFormatada} - ${horario} (OBS: ORDEM DE CHEGADA)`
         doc.text(DataAgendada, 20, textY);
         textY += 8;
 
