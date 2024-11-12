@@ -1,5 +1,20 @@
 const gerarPdf = document.getElementById('gerarPdf');
 
+document.addEventListener("DOMContentLoaded", function() {
+    const inputs = document.querySelectorAll("input, textarea, select"); // Seleciona todos os campos de input, textarea e select
+
+    inputs.forEach((input, index) => {
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") { // Verifica se a tecla pressionada foi 'Enter'
+                event.preventDefault(); // Impede o envio do formulário ou outro comportamento padrão
+                if (index < inputs.length - 1) { // Se não for o último campo
+                    inputs[index + 1].focus(); // Move o foco para o próximo campo
+                }
+            }
+        });
+    });
+});
+
 // Função para obter a data atual no formato YYYY-MM-DD
 function obterDataAtual() {
     const hoje = new Date();
@@ -417,4 +432,3 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
     const nomeArquivoCredencial = `${nome.replace(/ /g, '_')}_${cpf}.pdf`;
     doc.save(nomeArquivoCredencial);
 });
-
