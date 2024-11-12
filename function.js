@@ -1,6 +1,22 @@
 const gerarPdf = document.getElementById('gerarPdf');
 
 document.addEventListener("DOMContentLoaded", function() {
+    const limparButton = document.getElementById("limparCampos");
+
+    limparButton.addEventListener("click", function() {
+        const inputs = document.querySelectorAll("input, textarea, select"); // Seleciona todos os inputs, textarea e selects
+
+        inputs.forEach(function(input) {
+            if (input.type === "radio" || input.type === "checkbox") {
+                input.checked = false; // Desmarca os radios e checkboxes
+            } else {
+                input.value = ""; // Limpa o valor dos outros inputs
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
     const inputs = document.querySelectorAll("input, textarea, select"); // Seleciona todos os campos de input, textarea e select
 
     inputs.forEach((input, index) => {
