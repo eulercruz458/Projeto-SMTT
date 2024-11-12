@@ -66,3 +66,22 @@ button:hover {
 .botaoEstacionamento:hover {
     background-color: #0056b3; /* Cor de fundo ao passar o mouse */
 }
+
+#limparCampos {
+    background-color: RED; /* Cor vermelha de fundo */
+    color: white; /* Cor do texto em branco */
+    border: none; /* Sem borda */
+    padding: 10px 20px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho da fonte */
+    cursor: pointer; /* Cursor em forma de mãozinha */
+    border-radius: 5px; /* Bordas arredondadas */
+    transition: background-color 0.3s, transform 0.2s; /* Efeito de transição para cor e transformação */
+}
+
+#limparCampos:hover {
+    background-color: #D10000; /* Cor mais escura no hover */
+}
+
+#limparCampos:active {
+    transform: scale(0.98); /* Efeito de "pressionar" ao clicar */
+}
