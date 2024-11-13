@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
         inputs.forEach(function(input) {
             if (input.type === "radio" || input.type === "checkbox") {
                 input.checked = false; // Desmarca os radios e checkboxes
-            } else {
+            } else if(input.id != "dataHoje"){
                 input.value = ""; // Limpa o valor dos outros inputs
             }
         });
