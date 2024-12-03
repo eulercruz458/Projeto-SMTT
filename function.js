@@ -189,6 +189,7 @@ gerarPdf.addEventListener('click', async () => {
     const telefone2 = document.getElementById('telefone2').value;
     const dataAgendamento = document.getElementById('dataAgendamento').value;
     const sexo = document.querySelector('input[name="sexo"]:checked').value;
+  const deficiencia = document.querySelector('input[name="deficiencia"]:checked').value;
     const horario = document.getElementById('horario').value;
     
     const { cpfResponsavel, nomeOutroResponsavel} = verificarIdade(nomeMae);
@@ -244,6 +245,19 @@ gerarPdf.addEventListener('click', async () => {
     } else if (sexo === 'feminino') {
         doc.text('X', 132, 60); // Posição para feminino
     }
+  
+      if (deficiencia === 'TEA') {
+        doc.text('X', 75, 154); // Posição para TEA
+    } else if (deficiencia === 'mental') {
+        doc.text('X', 51, 154); // Posição para mental
+    } else if (deficiencia === 'fisico') {
+        doc.text('X', 95, 154); // Posição para fisico
+    } else if (deficiencia === 'visual') {
+        doc.text('X', 163, 154); // Posição para visual
+    }  else if (deficiencia === 'auditivo') {
+        doc.text('X', 132.5, 154); // Posição para auditivo
+    }  
+  
 
     // Salva o PDF
     const nomeArquivo = `${nome.replace(/ /g, '_')}_${cpf}.pdf`; // Substitui espaços por sublinhados
@@ -435,9 +449,9 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
         
         textY+=20;
         
-        doc.text(`LOCAL PERICIA`, 105, textY+3,{ align: 'center' });
-        doc.setFontSize(9)
-        const textoEnderecoAgendamento = "CONFIRMAR LOCAL DA PERICIA PELO WHATSAPP COM 2 DIAS DE ANTECEDÊNCIA\nENDEREÇO 1: Av. Murilo Dantas, 881, Sala 21, Farolândia, Aracaju-SE\nENDEREÇO 2: R. Roberto Fonseca, 200, Inácio Barbosa, Aracaju - SE\nFone: (79) 98836-6435 e 98836-6497";
+        doc.text(`LOCAL PERÍCIA`, 105, textY+3,{ align: 'center' });
+        doc.setFontSize(13)
+        const textoEnderecoAgendamento = "ENDEREÇO: R. Roberto Fonseca, 200, Inácio Barbosa, Aracaju - SE\nFone: (79) 98836-6435 e 98836-6497";
         textY+=5;
         doc.text(textoEnderecoAgendamento, 105, textY+3, { align: 'center' });
         
