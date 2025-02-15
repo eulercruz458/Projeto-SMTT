@@ -1,0 +1,125 @@
+/* Definir a fonte usando o Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f0f0f0; /* Cor de fundo mais suave */
+    background-image: url('https://lugarperfeito.com/uploads/ckeditor/pictures/1492/content_IMG_6025.jpg'); /* Imagem de fundo */
+    background-size: cover; /* A imagem cobre toda a tela */
+    background-position: center; /* Centraliza a imagem */
+    background-attachment: fixed; /* A imagem não rola junto com o conteúdo */
+    margin: 0;
+    padding: 20px;
+    color: #333; /* Texto mais escuro para contraste */
+}
+
+/* Alinhar o título corretamente */
+h1 {
+    text-align: center;
+    color: black; /* Cor do título */
+    font-size: 2.5rem; /* Tamanho maior para o título */
+    margin: 0 auto 20px; /* Menor espaço abaixo do título */
+    width: 100%; /* Garantir que o título ocupe toda a largura disponível */
+}
+
+/* Formulário centralizado */
+form {
+    background: #ffffff;
+    padding: 30px; /* Reduzi o padding do formulário */
+    border-radius: 8px; /* Bordas mais arredondadas */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombras sutis */
+    max-width: 600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Colunas mais equilibradas */
+    gap: 5px; /* Reduzi o espaço entre todos os elementos do formulário */
+    align-items: center;
+    /* padding-bottom: 100px; */
+}
+
+/* Labels */
+label {
+    font-weight: 500; /* Peso de fonte mais forte */
+    font-size: 1.1rem; /* Tamanho maior */
+    color: black; /* Cor um pouco mais suave para os labels */
+    margin-bottom: 5px; /* Menor espaço abaixo dos labels */
+    grid-column: span 2;
+}
+
+/* Campos de texto */
+input[type="text"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px; /* Diminui o padding dos campos de entrada */
+    border: 1px solid #ddd; /* Borda mais suave */
+    border-radius: 6px; /* Bordas mais arredondadas */
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus {
+    border-color: #007bff; /* Cor de borda ao focar */
+    outline: none; /* Remover contorno */
+}
+
+
+
+/* Botões */
+button {
+    width: 100%;
+    padding: 8px; /* Menos padding nos botões */
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+    grid-column: span 2;
+    margin-top: 5px; /* Menor espaço entre os botões */
+}
+
+/* Hover e foco nos botões */
+button:hover {
+    background-color: #218838; /* Cor mais escura no hover */
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Botão personalizado para estacionamento */
+.botaoEstacionamento {
+    background-color: #007bff;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    grid-column: span 2;
+    margin-top: 5px; /* Menor espaço entre os botões */
+}
+
+.botaoEstacionamento:hover {
+    background-color: #0056b3;
+}
+
+/* Botão de limpar campos */
+#limparCampos {
+    background-color: #dc3545; /* Cor vermelha mais suave */
+    color: white;
+    border: none;
+    padding: 10px 18px; /* Menos padding para o botão de limpar */
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 5px; /* Menor espaço entre os botões */
+}
+
+#limparCampos:hover {
+    background-color: #c82333;
+}
+
+#limparCampos:active {
+    transform: scale(0.98);
+}

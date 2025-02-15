@@ -1,0 +1,128 @@
+
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Formulário de Agendamento</h1>
+    <form id="agendamentoForm">
+        <div class="input-container">
+            <label for="dataHoje">Data de hoje:</label>
+            <input type="date" id="dataHoje" required>
+        </div>
+        <div class="input-container">
+            <label for="nome">Nome Completo:</label>
+            <input type="text" id="nome" required>
+        </div>
+        <div class="input-container">
+            <label for="dataNascimento">Data de nascimento:</label>
+            <input type="date" id="dataNascimento" required>
+        </div>
+        <div class="input-container">
+            <label for="rg">RG:</label>
+            <input type="text" id="rg" required>
+        </div>
+        <div class="input-container">
+            <label for="ssp">SSP:</label>
+            <input type="text" id="ssp" required>
+        </div>
+        <div class="input-container">
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" required>
+        </div>
+        <div class="input-container">
+            <label for="nomeMae">Nome da Mãe:</label>
+            <input type="text" id="nomeMae" required>
+        </div>
+        <div class="input-container">
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" required>
+        </div>
+        <div class="input-container">
+            <label for="numCasa">N°:</label>
+            <input type="text" id="numCasa" required>
+        </div>
+        <div class="input-container">
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" required>
+        </div>
+        <div class="input-container">
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" required>
+        </div>
+        <div class="input-container">
+            <label for="telefone1">Telefone (1):</label>
+            <input type="text" id="telefone1" required>
+        </div>
+        <div class="input-container">
+            <label for="telefone2">Telefone (2):</label>
+            <input type="text" id="telefone2" required>
+        </div>
+        <div class="input-container">
+            <label>Sexo:</label>
+            <div>
+                <label for="sexoMasculino">
+                    <input type="radio" id="sexoMasculino" name="sexo" value="masculino" required>
+                    Masculino
+                </label>
+                <label for="sexoFeminino">
+                    <input type="radio" id="sexoFeminino" name="sexo" value="feminino">
+                    Feminino
+                </label>
+            </div>
+        </div>
+        <div class="input-container">
+            <label for="dataAgendamento">Data do Agendamento:</label>
+            <input type="date" id="dataAgendamento" required>
+        </div>
+        <div class="input-container">
+            <label for="horario">Horário:</label>
+            <input type="text" id="horario" required>
+        </div>
+       </div>
+        <div class="input-container">
+            <label>Tipo de Deficiência:</label>
+            <div>
+                <label for="TEA">
+                    <input type="radio" id="TEA" name="deficiencia" value="TEA" required>
+                    TEA      &nbsp;  &nbsp;
+                </label>
+                <label for="mental">
+                    <input type="radio" id="mental" name="deficiencia" value="mental">
+                    Mental&nbsp;  &nbsp;
+                </label>
+              <label for="auditivo">
+                    <input type="radio" id="auditivo" name="deficiencia" value="auditivo">
+                    Auditivo
+                </label>
+     
+            </div>
+        </div>
+        <div>
+          &nbsp;
+          <div>
+                <label for="visual">
+                    <input type="radio" id="visual" name="deficiencia" value="visual" required>
+                    Visual &nbsp;  &nbsp;
+                </label>
+                <label for="fisico">
+                    <input type="radio" id="fisico" name="deficiencia" value="fisico">
+                    Fisico
+                </label>
+            </div>
+          </div>
+      
+            <button type="button" id="gerarPdf">PASSE LIVRE</button>
+            <button type="button" id="credencialEstacionamento" class="botaoEstacionamento">CREDENCIAL DE ESTACIONAMENTO</button>
+            <button type="button" id="limparCampos">APAGAR TUDO</button>
+       
+    </form>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/inputmask.min.js"></script>
+    <script src="function.js"></script>
+</body>
+</html>
