@@ -1,4 +1,5 @@
 const gerarPdf = document.getElementById('gerarPdf');
+const trocarCinzaRoxo = document.getElementById('trocarCinzaRoxo');
 
 document.addEventListener("DOMContentLoaded", function() {
     const limparButton = document.getElementById("limparCampos");
@@ -387,7 +388,7 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
 
 
 
-    const textoEndereco = "Av. Murilo Dantas, 881, Sala 21, Farolândia, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
+    const textoEndereco = "Rua Roberto Fonseca, 200, Inacio Barbosa, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
     y += 15; // Ajusta a posição para o novo bloco de texto
     doc.setFontSize(9);
     //doc.text(textoEndereco, 105, 182, { align: 'center' }); // Centraliza o texto no eixo X
@@ -462,3 +463,88 @@ let y = rectY + 20; // Ajusta a posição do corpo do texto para começar abaixo
     const nomeArquivoCredencial = `${nome.replace(/ /g, '_')}_${cpf}.pdf`;
     doc.save(nomeArquivoCredencial);
 });
+
+trocarCinzaRoxo.addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf; // Acessa jsPDF do objeto global
+    let autorizacao2 = false;
+
+
+    const nome = document.getElementById('nome').value;
+    const rg = document.getElementById('rg').value;
+    const ssp = document.getElementById('ssp').value;
+    const cpf = document.getElementById('cpf').value;
+    const dataHoje = document.getElementById('dataHoje').value;
+    const cidade = document.getElementById('cidade').value;
+    const endereco = document.getElementById('endereco').value;
+    const numCasa = document.getElementById('numCasa').value;
+    const bairro = document.getElementById('bairro').value;
+    const telefone1 = document.getElementById('telefone1').value;
+    const dataHojeFormatada = formatarDataHoje(dataHoje);
+    const telefone1Formatado = formatarTelefone(telefone1);
+
+    const numeroCartao = prompt("Informe o número do cartão:");
+
+    const mensagem = `Deseja fazer em nome do beneficiario ${nome}?`;
+    autorizacao2 = confirm(mensagem);
+
+    
+    // Cria um novo documento PDF em branco
+    const doc = new jsPDF();
+    
+    if(autorizacao2){
+
+        const textoPrincipal = `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nome} portador(a) do RG nº ${rg} e inscrito(a) no CPF sob o nº ${cpf}, residente e domiciliado na ${endereco},${numCasa},${bairro},${cidade}, telefone nº ${telefone1Formatado}, solicita a substituição do Cartão Mais Aracaju Gratuidade da COR CINZA de nº ${numeroCartao} para a COR ROXA que NÃO PERMITE o acesso à parte traseira dos ônibus mediante a validação da biometria facial do beneficiário.`
+
+        const textoObs = "Estou ciente que esse cartão ficara retido no ato da solicitação da troca para confecção da segunda via, que será produzida em até 2 dias úteis para retirada no CEAC Parque Shopping ou CEAC Rodoviária Nova, Aracaju/SE."
+
+        const textoAssinatura = `Aracaju/SE, ${dataHojeFormatada}.\n\n\n\n\n________________________________________________\nAssinatura do Requerente`;
+
+        const textoAssinaturaCoordenador = `________________________________________________\nMARIA SOLANGE DA SILVA`;
+
+        const textoObsCoordenador = "Chefe do Núcleo de Atendimento - SMTT"
+
+        const textoEndereco = "____________________________________________________________________\nRua Roberto Fonseca, 200, Inacio Barbosa, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
+
+        doc.setFontSize(12);
+        adicionarTextoJustificado(doc, textoPrincipal, 170, 20, 50);
+        doc.setFont("helvetica", "bold");
+        adicionarTextoJustificado(doc, textoObs, 170, 20, 105);
+        doc.setFontSize(15);
+        doc.text("REQUERIMENTO", 100, 40, { align: 'center' });
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text(textoAssinatura, 100, 130, { align: 'center' });
+        doc.text(textoAssinaturaCoordenador, 100, 205, { align: 'center' });
+        doc.setFontSize(10);
+        doc.text(textoObsCoordenador, 100, 215, { align: 'center' });
+        doc.text(textoEndereco, 100, 278, { align: 'center' });
+
+
+        //Adiciona a imagem do logo
+        const logoURL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_F4EJslF8WhpMy0bCSb7D3aJpiYcZbpxxb0_-4KfgKzvUMEtr6yYQc9RL-TfC44m5-4&usqp=CAU';
+        const logoImg = await carregarImagem(logoURL);
+        doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
+
+        // Adiciona o texto institucional ao lado da imagem
+        doc.setFontSize(9);
+    
+
+        let textY = 13;
+        textLines.forEach(line => {
+            doc.text(line, 65, textY);
+            textY += 3;
+        });
+    }else{
+        nomeRequerente = prompt("Informe o nome do requerente:");
+        cpfRequerente = prompt("Informe o CPF do requerente:");
+        rgRequerente = prompt("Informe o RG do requerente:");
+        sppRequerente = prompt("SSP:");
+    }
+    
+    
+    // Salva o PDF com o nome desejado
+    const nomeArquivo = 'documento_em_branco.pdf';
+    doc.save(nomeArquivo);
+});
+
+   
