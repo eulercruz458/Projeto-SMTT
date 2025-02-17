@@ -489,7 +489,7 @@ trocarCinzaRoxo.addEventListener('click', async () => {
     if (numeroCartao === null || numeroCartao.trim() === "") {
         alert("Número do cartão não informado.");
     } else {
-        alert("Número do cartão:", numeroCartao);
+        alert(`Número do cartão: ${numeroCartao}`);
     }
 
 
@@ -628,7 +628,7 @@ trocarRoxoCinza.addEventListener('click', async () => {
     if (numeroCartao === null || numeroCartao.trim() === "") {
         alert("Número do cartão não informado.");
     } else {
-        alert("Número do cartão:", numeroCartao);
+        alert(`Número do cartão: ${numeroCartao}`);
     }
 
 
