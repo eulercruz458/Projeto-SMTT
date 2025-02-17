@@ -4,7 +4,7 @@
 body {
     font-family: 'Roboto', Arial, sans-serif;
     background-color: #f0f0f0; /* Cor de fundo mais suave */
-    background-image: url('https://www.viajenaviagem.com/wp-content/uploads/2022/01/1-Largo-da-Gente-Sergipana-1920x1080-1.jpg.webp'); /* Imagem de fundo */
+    background-image: url('https://lugarperfeito.com/uploads/ckeditor/pictures/1492/content_IMG_6025.jpg'); /* Imagem de fundo */
     background-size: cover; /* A imagem cobre toda a tela */
     background-position: center; /* Centraliza a imagem */
     background-attachment: fixed; /* A imagem não rola junto com o conteúdo */
@@ -91,7 +91,8 @@ button:focus {
 }
 
 #trocarRoxoCinza{
-    background-color: #8400ff;
+   
+    background-color: #8b8b8b;
     border-radius: 6px;
     font-size: 1.2rem;
     grid-column: span 2;
@@ -99,18 +100,19 @@ button:focus {
 }
 
 #trocarRoxoCinza:hover {
-    background-color: #52009e;
+    background-color: #616161;
 }
 
 #trocarCinzaRoxo{
-    background-color: #8b8b8b;
+    background-color: #8400ff;
     border-radius: 6px;
     font-size: 1.2rem;
     grid-column: span 2;
     margin-top: 5px; /* Menor espaço entre os botões */
 }
 #trocarCinzaRoxo:hover {
-    background-color: #616161;
+   
+    background-color: #52009e;
 }
 
 
