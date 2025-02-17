@@ -481,11 +481,170 @@ trocarCinzaRoxo.addEventListener('click', async () => {
     const telefone1 = document.getElementById('telefone1').value;
     const dataHojeFormatada = formatarDataHoje(dataHoje);
     const telefone1Formatado = formatarTelefone(telefone1);
+    const dataNascimento = document.getElementById('dataNascimento').value
+
+    
+    const numeroCartao = prompt("Informe o número do cartão:");
+    
+    if (numeroCartao === null || numeroCartao.trim() === "") {
+        console.log("Número do cartão não informado.");
+    } else {
+        console.log("Número do cartão:", numeroCartao);
+    }
+
+
+    
+    const hoje = new Date();
+    const anoNascimento = new Date(dataNascimento).getFullYear();
+    const mesNascimento = new Date(dataNascimento).getMonth();
+    const diaNascimento = new Date(dataNascimento).getDate();
+
+    // Calcula a idade
+    let idade = hoje.getFullYear() - anoNascimento;
+    
+    // Ajusta a idade se ainda não tiver feito aniversário este ano
+    if (hoje.getMonth() < mesNascimento || (hoje.getMonth() === mesNascimento && hoje.getDate() < diaNascimento)) {
+        idade--;
+    }
+    
+    if (idade < 8){
+        autorizacao2 = false
+    }   
+    else{
+        const mensagem = `Deseja fazer em nome do beneficiario ${nome}?`;
+        autorizacao2 = confirm(mensagem);
+        
+    }
+    
+    // Cria um novo documento PDF em branco
+    const doc = new jsPDF();
+
+    const textoObs = "Estou ciente que esse cartão ficara retido no ato da solicitação da troca para confecção da segunda via, que será produzida em até 2 dias úteis para retirada no CEAC Parque Shopping ou CEAC Rodoviária Nova, Aracaju/SE."
+
+    const textoAssinatura = `Aracaju/SE, ${dataHojeFormatada}.\n\n\n\n\n________________________________________________\nAssinatura do Requerente`;
+
+    const textoAssinaturaCoordenador = `________________________________________________\nMARIA SOLANGE DA SILVA`;
+
+    const textoObsCoordenador = "Chefe do Núcleo de Atendimento - SMTT"
+
+    const textoEndereco = "______________________________________________________________\nSMTT, Rua Roberto Fonseca, 200, Inacio Barbosa, Aracaju-SE\nFone: (79) 98836-6435 e 98836-6497";
+
+    //Adiciona a imagem do logo
+    const logoURL = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_F4EJslF8WhpMy0bCSb7D3aJpiYcZbpxxb0_-4KfgKzvUMEtr6yYQc9RL-TfC44m5-4&usqp=CAU';
+    const logoImg = await carregarImagem(logoURL);
+    doc.addImage(logoImg, 'PNG', 10, 10, 50, 20);
+
+    // Adiciona o texto institucional ao lado da imagem
+    doc.setFontSize(9);
+
+
+    let textY = 13;
+    textLines.forEach(line => {
+        doc.text(line, 65, textY);
+        textY += 3;
+    });
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    adicionarTextoJustificado(doc, textoObs, 170, 20, 105);
+    doc.setFontSize(15);
+    doc.text("REQUERIMENTO", 100, 40, { align: 'center' });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(textoAssinatura, 100, 130, { align: 'center' });
+    doc.setFontSize(9);
+    doc.text(textoEndereco, 100, 278, { align: 'center' });
+
+
+   // if(numeroCartao = NaN)
+    
+    if(autorizacao2) {
+
+        const textoPrincipal = `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nome} portador(a) do RG nº ${rg} SSP ${ssp} e inscrito(a) no CPF sob o nº ${cpf}, residente e domiciliado na ${endereco}, ${numCasa}, ${bairro}, ${cidade}, telefone nº ${telefone1Formatado}, solicita a substituição do Cartão Mais Aracaju Gratuidade da COR CINZA de nº ${numeroCartao} para a COR ROXA que NÃO PERMITE o acesso à parte traseira dos ônibus mediante a validação da biometria facial do beneficiário.`
+
+
+        doc.setFontSize(12);
+        adicionarTextoJustificado(doc, textoPrincipal, 170, 20, 50);
+
+        doc.text(textoAssinaturaCoordenador, 100, 205, { align: 'center' });
+        doc.setFontSize(10);
+        doc.text(textoObsCoordenador, 100, 215, { align: 'center' });
+        
+
+    }else{
+        const nomeRequerente = prompt("Informe o nome do requerente:");
+        const cpfRequerente = prompt(`Informe o CPF de ${nomeRequerente}:`);
+        const rgRequerente = prompt(`Informe o RG de ${nomeRequerente}:`);
+        const sspRequerente = prompt("SSP:");
+
+        const textoPrincipal1 = `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nomeRequerente} portador(a) do RG nº ${rgRequerente} SSP ${sspRequerente} e inscrito(a) no CPF sob o nº ${cpfRequerente}, residente e domiciliado na ${endereco}, ${numCasa}, ${bairro}, ${cidade}, telefone nº ${telefone1Formatado}, AUTORIZO a substituição do Cartão Mais Aracaju Gratuidade da COR CINZA de nº ${numeroCartao} para a COR ROXA que NÃO PERMITE o acesso à parte traseira dos ônibus mediante a validação da biometria facial do beneficiário.`
+
+        doc.setFontSize(12);
+        adicionarTextoJustificado(doc, textoPrincipal1, 170, 20, 50);
+
+        doc.text(`Para preenchimento da SMTT:\n\nNome do beneficiário: ${nome}\nCPF: ${cpf}`, 15, 185);
+
+        doc.text(textoAssinaturaCoordenador, 100, 235, { align: 'center' });
+        doc.setFontSize(10);
+        doc.text(textoObsCoordenador, 100, 245, { align: 'center' });
+        
+
+
+
+
+    }
+    // Salva o PDF com o nome personalizado
+    const nomeArquivoTrocaCartaoCinzaRoxo = `${nome.replace(/ /g, '_')}_${cpf}.pdf`;
+    doc.save(nomeArquivoTrocaCartaoCinzaRoxo);
+});
+
+   
+trocarRoxoCinza.addEventListener('click', async () => {
+    const { jsPDF } = window.jspdf; // Acessa jsPDF do objeto global
+
+
+
+    let autorizacao = false;
+
+
+    const nome = document.getElementById('nome').value;
+    const rg = document.getElementById('rg').value;
+    const ssp = document.getElementById('ssp').value;
+    const cpf = document.getElementById('cpf').value;
+    const dataHoje = document.getElementById('dataHoje').value;
+    const cidade = document.getElementById('cidade').value;
+    const endereco = document.getElementById('endereco').value;
+    const numCasa = document.getElementById('numCasa').value;
+    const bairro = document.getElementById('bairro').value;
+    const telefone1 = document.getElementById('telefone1').value;
+    const dataHojeFormatada = formatarDataHoje(dataHoje);
+    const telefone1Formatado = formatarTelefone(telefone1);
+    const dataNascimento = document.getElementById('dataNascimento').value;
+    
 
     const numeroCartao = prompt("Informe o número do cartão:");
 
-    const mensagem = `Deseja fazer em nome do beneficiario ${nome}?`;
-    autorizacao2 = confirm(mensagem);
+    const hoje = new Date();
+    const anoNascimento = new Date(dataNascimento).getFullYear();
+    const mesNascimento = new Date(dataNascimento).getMonth();
+    const diaNascimento = new Date(dataNascimento).getDate();
+
+    // Calcula a idade
+    let idade = hoje.getFullYear() - anoNascimento;
+    
+    // Ajusta a idade se ainda não tiver feito aniversário este ano
+    if (hoje.getMonth() < mesNascimento || (hoje.getMonth() === mesNascimento && hoje.getDate() < diaNascimento)) {
+        idade--;
+    }
+    
+    if (idade < 8){
+        autorizacao = false
+    }   
+    else{
+        const mensagem = `Deseja fazer em nome do beneficiario ${nome}?`;
+        autorizacao = confirm(mensagem);
+        
+    }
 
     
     // Cria um novo documento PDF em branco
@@ -527,11 +686,8 @@ trocarCinzaRoxo.addEventListener('click', async () => {
     doc.setFontSize(9);
     doc.text(textoEndereco, 100, 278, { align: 'center' });
 
-    
-    if(autorizacao2){
-
-        const textoPrincipal = `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nome} portador(a) do RG nº ${rg} SSP ${ssp} e inscrito(a) no CPF sob o nº ${cpf}, residente e domiciliado na ${endereco}, ${numCasa}, ${bairro}, ${cidade}, telefone nº ${telefone1Formatado}, solicita a substituição do Cartão Mais Aracaju Gratuidade da COR CINZA de nº ${numeroCartao} para a COR ROXA que NÃO PERMITE o acesso à parte traseira dos ônibus mediante a validação da biometria facial do beneficiário.`
-
+    if (autorizacao){
+        const textoPrincipal = `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nome} portador(a) do RG nº ${rg} SSP ${ssp} e inscrito(a) no CPF sob o nº ${cpf}, residente e domiciliado na ${endereco}, ${numCasa}, ${bairro}, ${cidade}, telefone nº ${telefone1Formatado}, solicita a substituição do Cartão Mais Aracaju Gratuidade da COR ROXA de nº ${numeroCartao} para a COR CINZA que PERMITE o acesso à parte traseira dos ônibus mediante a validação da biometria facial do beneficiário.`
 
         doc.setFontSize(12);
         adicionarTextoJustificado(doc, textoPrincipal, 170, 20, 50);
@@ -540,17 +696,18 @@ trocarCinzaRoxo.addEventListener('click', async () => {
         doc.setFontSize(10);
         doc.text(textoObsCoordenador, 100, 215, { align: 'center' });
         
-
-    }else{
+    }
+    else{
         const nomeRequerente = prompt("Informe o nome do requerente:");
         const cpfRequerente = prompt(`Informe o CPF de ${nomeRequerente}:`);
         const rgRequerente = prompt(`Informe o RG de ${nomeRequerente}:`);
         const sspRequerente = prompt("SSP:");
 
-        const textoPrincipal1 = `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nomeRequerente} portador(a) do RG nº ${rgRequerente} SSP ${sspRequerente} e inscrito(a) no CPF sob o nº ${cpfRequerente}, residente e domiciliado na ${endereco}, ${numCasa}, ${bairro}, ${cidade}, telefone nº ${telefone1Formatado}, AUTORIZO a substituição do Cartão Mais Aracaju Gratuidade da COR CINZA de nº ${numeroCartao} para a COR ROXA que NÃO PERMITE o acesso à parte traseira dos ônibus mediante a validação da biometria facial do beneficiário.`
+        const textoPrincipalTEA = 
+        `O Núcleo de Atendimento da Perícia Médica com base nas Leis n° 1.723/91 e n° 1.325/1987 comunica que o(a) requerente ${nomeRequerente} portador(a) do RG nº ${rgRequerente} SSP ${sspRequerente} e inscrito(a) no CPF sob o nº ${cpfRequerente}, residente e domiciliado na ${endereco}, ${numCasa}, ${bairro}, ${cidade}, telefone nº ${telefone1Formatado}, AUTORIZO a substituição do Cartão Mais Aracaju Gratuidade da COR ROXA de nº ${numeroCartao} para a COR CINZA que PERMITE o acesso à parte traseira do ônibus mediante a validação da biometria facial do beneficiário.`
 
         doc.setFontSize(12);
-        adicionarTextoJustificado(doc, textoPrincipal1, 170, 20, 50);
+        adicionarTextoJustificado(doc, textoPrincipalTEA, 170, 20, 50);
 
         doc.text(`Para preenchimento da SMTT:\n\nNome do beneficiário: ${nome}\nCPF: ${cpf}`, 15, 185);
 
@@ -558,14 +715,16 @@ trocarCinzaRoxo.addEventListener('click', async () => {
         doc.setFontSize(10);
         doc.text(textoObsCoordenador, 100, 245, { align: 'center' });
         
-
-
-
-
     }
+
+
+
     // Salva o PDF com o nome personalizado
-    const nomeArquivoTrocaCartaoCinzaRoxo = `${nome.replace(/ /g, '_')}_${cpf}.pdf`;
-    doc.save(nomeArquivoTrocaCartaoCinzaRoxo);
+    const nomeArquivoTrocaCartaoRoxoCinza = `${nome.replace(/ /g, '_')}_${cpf}.pdf`;
+    doc.save(nomeArquivoTrocaCartaoRoxoCinza);
+
 });
 
-   
+
+
+
