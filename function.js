@@ -487,9 +487,9 @@ trocarCinzaRoxo.addEventListener('click', async () => {
     const numeroCartao = prompt("Informe o número do cartão:");
     
     if (numeroCartao === null || numeroCartao.trim() === "") {
-        console.log("Número do cartão não informado.");
+        alert("Número do cartão não informado.");
     } else {
-        console.log("Número do cartão:", numeroCartao);
+        alert("Número do cartão:", numeroCartao);
     }
 
 
@@ -507,7 +507,7 @@ trocarCinzaRoxo.addEventListener('click', async () => {
         idade--;
     }
     
-    if (idade < 8){
+    if (idade < 18){
         autorizacao2 = false
     }   
     else{
@@ -556,7 +556,7 @@ trocarCinzaRoxo.addEventListener('click', async () => {
     doc.text(textoEndereco, 100, 278, { align: 'center' });
 
 
-   // if(numeroCartao = NaN)
+   
     
     if(autorizacao2) {
 
@@ -624,6 +624,16 @@ trocarRoxoCinza.addEventListener('click', async () => {
 
     const numeroCartao = prompt("Informe o número do cartão:");
 
+
+    if (numeroCartao === null || numeroCartao.trim() === "") {
+        alert("Número do cartão não informado.");
+    } else {
+        alert("Número do cartão:", numeroCartao);
+    }
+
+
+
+
     const hoje = new Date();
     const anoNascimento = new Date(dataNascimento).getFullYear();
     const mesNascimento = new Date(dataNascimento).getMonth();
@@ -637,7 +647,7 @@ trocarRoxoCinza.addEventListener('click', async () => {
         idade--;
     }
     
-    if (idade < 8){
+    if (idade < 18){
         autorizacao = false
     }   
     else{
