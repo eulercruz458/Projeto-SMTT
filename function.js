@@ -488,8 +488,6 @@ trocarCinzaRoxo.addEventListener('click', async () => {
     
     if (numeroCartao === null || numeroCartao.trim() === "") {
         alert("Número do cartão não informado.");
-    } else {
-        alert(`Número do cartão: ${numeroCartao}`);
     }
 
 
@@ -507,14 +505,11 @@ trocarCinzaRoxo.addEventListener('click', async () => {
         idade--;
     }
     
-    if (idade < 18){
-        autorizacao2 = false
-    }   
-    else{
+
         const mensagem = `Deseja fazer em nome do beneficiario ${nome}?`;
         autorizacao2 = confirm(mensagem);
         
-    }
+
     
     // Cria um novo documento PDF em branco
     const doc = new jsPDF();
@@ -627,8 +622,6 @@ trocarRoxoCinza.addEventListener('click', async () => {
 
     if (numeroCartao === null || numeroCartao.trim() === "") {
         alert("Número do cartão não informado.");
-    } else {
-        alert(`Número do cartão: ${numeroCartao}`);
     }
 
 
@@ -646,15 +639,10 @@ trocarRoxoCinza.addEventListener('click', async () => {
     if (hoje.getMonth() < mesNascimento || (hoje.getMonth() === mesNascimento && hoje.getDate() < diaNascimento)) {
         idade--;
     }
-    
-    if (idade < 18){
-        autorizacao = false
-    }   
-    else{
+
         const mensagem = `Deseja fazer em nome do beneficiario ${nome}?`;
         autorizacao = confirm(mensagem);
-        
-    }
+ 
 
     
     // Cria um novo documento PDF em branco
