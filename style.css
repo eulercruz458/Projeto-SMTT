@@ -37,6 +37,16 @@ form {
     
 }
 
+.div-branca {
+    background-color: #ffffff; /* Cor de fundo branca */
+    padding: 20px; /* Padding interno */
+    width: 300px; /* Largura fixa para a div */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombras sutis */
+  float: right;
+  margin-top: -170px;
+}
+
 /* Labels */
 label {
     font-weight: 500; /* Peso de fonte mais forte */
@@ -149,6 +159,3 @@ button:focus {
 #limparCampos:active {
     transform: scale(0.98);
 }
-
-
-
